@@ -5,6 +5,7 @@ using UnityEngine;
 public class SpotScript : MonoBehaviour
 {
     private bool xTurn;
+    private bool empty;
     public GameObject xMark;
     public GameObject oMark;
 
@@ -14,6 +15,7 @@ public class SpotScript : MonoBehaviour
     void Start()
     {
         gameScript = gameManager.GetComponent<GameManager>();
+        empty = true;
     }
 
 
@@ -30,16 +32,20 @@ public class SpotScript : MonoBehaviour
             if (hit.collider != null && hit.collider.gameObject == gameObject)
             {
                 // Mouse click detected on the colliders
-                xTurn =  gameScript.getTurn();
-                if (xTurn)
+                xTurn = gameScript.getTurn();
+                if (empty)
                 {
-                    GameObject spawnedPrefab = Instantiate(xMark, transform.position, Quaternion.identity);
-                    gameScript.toggleTurn();
-                }
-                else
-                {
-                    GameObject spawnedPrefab = Instantiate(oMark, transform.position, Quaternion.identity);
-                    gameScript.toggleTurn();
+                    if (xTurn)
+                    {
+                        GameObject spawnedPrefab = Instantiate(xMark, transform.position, Quaternion.identity);
+                        gameScript.toggleTurn();
+                    }
+                    else
+                    {
+                        GameObject spawnedPrefab = Instantiate(oMark, transform.position, Quaternion.identity);
+                        gameScript.toggleTurn();
+                    }
+                    empty = false;
                 }
             }
         }
