@@ -27,11 +27,23 @@ public class SpotScript : MonoBehaviour
         canAdd = false;
     }
 
-
-    //private GameObject currentTurnObject = xMark;
-    // Update is called once per frame
+    
+    /*
+     * Checks if it is possible to add piece to the board based on 2 factors:
+     * 1) There is an empty spot (no piece has been played there)
+     * 2) The previous board has a piece already played there (simulates stacking)
+     * Note: Board 1 does not have the restriction of 2) because it is the bottom layer
+     * 
+     *
+     * If it is possible to add to the board it adds to the board, it adds it the 2d matrix
+     * representing the correct board
+     *
+     * @returns: true if can add to board, false if cannot
+     */
     public bool addToBoard(bool xTurn)
     {
+        //uses name of object to know what column and row the spot is in
+        //uses the board variable to know what board the spot is in
         int row = (int)char.GetNumericValue(name[0]);
         int col = (int)char.GetNumericValue(name[1]);
         switch (board)
@@ -67,58 +79,65 @@ public class SpotScript : MonoBehaviour
     }
     void Update()
     {
-        if (Input.GetMouseButtonDown(0)) // Left mouse button
+        if (Input.GetMouseButtonDown(0)) // Checks for mouse click
         {
             canAdd = true;
             Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             RaycastHit2D hit = Physics2D.Raycast(mousePosition, Vector2.zero);
+            //checks if spot was clicked
             if (hit.collider != null && hit.collider.gameObject == gameObject)
             {
-                // Mouse click detected on the colliders
                 xTurn = gameScript.getTurn();
+                //handeling for X's turn
                 if (xTurn)
                 {
+                        //adds X to board if possible
                         canAdd = addToBoard(gameScript.getTurn());
                         if (canAdd)
                         {
+                            //instantiates the X prefab to spawn on spot
                             GameObject spawnedPrefab = Instantiate(xMark, transform.position, Quaternion.identity);
+                            //checks if winner
                             if (gameScript.determineIfWinner())
                             {
                                 Debug.Log("X Wins!");
                                 notificationText.text = "X Wins!";
-                                //Application.Quit();
+                                Application.Quit();
                             }
+                            //changes turn to O
                             gameScript.toggleTurn();
                         }
                         else
                         {
-                            Debug.Log("Cant add here");
+                            //Debug.Log("Cant add here");
                         }
 
-
                 }
+                //handeling for Os turn
                 else
                 {
+                    //adds O to board if possible
                     canAdd = addToBoard(gameScript.getTurn());
                     if (canAdd)
                     {
+                        //instantiates the O prefab to spawn on spot
                         GameObject spawnedPrefab = Instantiate(oMark, transform.position, Quaternion.identity);
+                        //checks if winner
                         if (gameScript.determineIfWinner())
                         {
                             Debug.Log("O Wins!");
                             notificationText.text = "O Wins!";
-                            //Application.Quit();
+                            Application.Quit();
                         }
+                        //changes turn to X 
                         gameScript.toggleTurn();
                     }
                     else
                     {
-                        Debug.Log("Cant add here");
+                        //Debug.Log("Cant add here");
                     }
 
                 }
-
-                empty = false;
             }
             
         }

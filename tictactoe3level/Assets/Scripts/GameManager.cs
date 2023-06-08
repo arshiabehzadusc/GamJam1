@@ -2,13 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//class for a gameboard (we use 3 total)
 public class GameBoard
 {
     public int[,] board;
     public GameBoard()
     {
+        //instantiate to all 0s (meaning empty board)
         board = new int[,] { { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, };
     }
+    
+    //fills board with 1 or 2 in the matrix X - 1, O - 2
     public void fillSpot( bool xTurn,int row, int col)
     {
         if (xTurn)
@@ -21,6 +25,7 @@ public class GameBoard
         }
     }
 
+    //helper function to print
     public void printBoard()
     {
         for (int i = 0; i < 3; i++)
@@ -49,10 +54,12 @@ public class GameManager : MonoBehaviour
         g3 = new GameBoard();
         xTurn = true;
     }
+    //returns whos turn it is
     public bool getTurn()
     {
         return xTurn;
     }
+    //changes the turn
     public void toggleTurn()
     {
         if (xTurn)
@@ -71,6 +78,7 @@ public class GameManager : MonoBehaviour
         int[,] b2 = g2.board;
         int[,] b3 = g3.board;
         // we did this by hand btw so sry if we missed something
+        //split up into multiple if statements so that it is easier to read
         if ((b1[0, 0] == b1[0, 1] && b1[0, 1] == b1[0, 2] && b1[0, 0] > 0 && b1[0, 1] > 0 && b1[0, 2] > 0)
             || (b1[1, 0] == b1[1, 1] && b1[1, 1] == b1[1, 2] && b1[1, 0] > 0 && b1[1, 1] > 0 && b1[1, 2] > 0)
             || (b1[2, 0] == b1[2, 1] && b1[2, 1] == b1[2, 2] && b1[2, 0] > 0 && b1[2, 1] > 0 && b1[2, 2] > 0)
